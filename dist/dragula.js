@@ -28,12 +28,6 @@ function rmClass (el, className) {
   el.className = el.className.replace(lookupClass(className), ' ').trim();
 }
 
-
-function distance(pt1, pt2) {
-    var dist2 = Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2);
-    return Math.sqrt(dist2);
-}
-
 module.exports = {
   add: addClass,
   rm: rmClass
@@ -157,6 +151,11 @@ function dragula (initialContainers, options) {
         e.preventDefault(); // fixes https://github.com/bevacqua/dragula/issues/155
       }
     }
+  }
+
+  function distance(pt1, pt2) {
+    var dist2 = Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2);
+    return Math.sqrt(dist2);
   }
 
   function startBecauseMouseMoved (e) {
