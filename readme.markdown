@@ -205,6 +205,10 @@ When an element is dropped onto a container, it'll be placed near the point wher
 
 You can provide an `invalid` method with a `(el, handle)` signature. This method should return `true` for elements that shouldn't trigger a drag. The `handle` argument is the element that was clicked, while `el` is the item that would be dragged. Here's the default implementation, which doesn't prevent any drags.
 
+#### `options.deadzone`
+
+When this option is enabled, if the user clicks on an input element the drag won't start until their mouse pointer moves the specified distance. This translates into the user being able to accidently drag a few pixels and not trigger the drag. Defaults to 0.
+
 ```js
 function invalidTarget (el, handle) {
   return false;

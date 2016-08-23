@@ -28,6 +28,12 @@ function rmClass (el, className) {
   el.className = el.className.replace(lookupClass(className), ' ').trim();
 }
 
+
+function distance(pt1, pt2) {
+    var dist2 = Math.pow(pt1.x - pt2.x, 2) + Math.pow(pt1.y - pt2.y, 2);
+    return Math.sqrt(dist2);
+}
+
 module.exports = {
   add: addClass,
   rm: rmClass
@@ -75,6 +81,7 @@ function dragula (initialContainers, options) {
   if (o.removeOnSpill === void 0) { o.removeOnSpill = false; }
   if (o.direction === void 0) { o.direction = 'vertical'; }
   if (o.ignoreInputTextSelection === void 0) { o.ignoreInputTextSelection = true; }
+  if (o.deadzone === void 0) { o.deadzone = 0; }
   if (o.mirrorContainer === void 0) { o.mirrorContainer = doc.body; }
 
   var drake = emitter({
@@ -153,6 +160,9 @@ function dragula (initialContainers, options) {
   }
 
   function startBecauseMouseMoved (e) {
+    var clientX = getCoord('clientX', e);
+    var clientY = getCoord('clientY', e);
+
     if (!_grabbed) {
       return;
     }
@@ -165,12 +175,21 @@ function dragula (initialContainers, options) {
       return;
     }
     if (o.ignoreInputTextSelection) {
-      var clientX = getCoord('clientX', e);
-      var clientY = getCoord('clientY', e);
       var elementBehindCursor = doc.elementFromPoint(clientX, clientY);
       if (isInput(elementBehindCursor)) {
         return;
       }
+    }
+
+    var grabTravelDistance = distance({
+      x: _moveX,
+      y: _moveY
+    }, {
+      x: clientX,
+      y: clientY
+    });
+    if (grabTravelDistance <= o.deadzone) {
+      return;
     }
 
     var grabbed = _grabbed; // call to end() unsets _grabbed
